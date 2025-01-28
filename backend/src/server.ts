@@ -32,6 +32,7 @@ export const serverOf: () => FastifyInstance = () => {
   server.get("/ping", async (request, reply) => {
     return reply.status(200).send({ msg: "pong" });
   });
+
   server.register(keycloak, opts);
   server.register(taskRoutes, { prefix: "/api/v1/tasks" });
   server.register(taskMemberRoutes, { prefix: "/api/v1/tasks/member" });
@@ -40,6 +41,7 @@ export const serverOf: () => FastifyInstance = () => {
     root: path.join(__dirname, "../../frontend/dist"),
     prefix: "/",
   });
+  
   server.ready(() => {
     console.log(server.printRoutes());
   });
