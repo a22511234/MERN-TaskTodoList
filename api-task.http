@@ -1,0 +1,56 @@
+http://localhost:8888/ping
+
+###
+GET http://localhost:8888/api/v1/tasks
+###
+GET http://localhost:8888/api/v1/tasks/member/huangtaa
+###
+POST http://localhost:8888/api/v1/tasks
+content-type: application/json
+
+{
+  "taskTitle": "完成報告",
+  "taskDescription": "撰寫年度財務報告，並提交給講師審閱。",
+  "startTime": "2025-01-27T10:00:00.000Z",
+  "endTime": "2025-01-27T18:00:00.000Z",
+  "alertTime": "2025-01-27T17:00:00.000Z",
+  "isCompleted": false,
+  "assignedTo": ["huangtaa", "hwangtaa"],
+  "createdBy": "classLeader1"
+}
+
+###
+POST http://localhost:8888/api/v1/tasks
+content-type: application/json
+
+{
+  "taskTitle": "小組討論",
+  "taskDescription": "召集小組成員討論課程計劃，並記錄討論內容。",
+  "startTime": "2025-01-30T15:00:00.000Z",
+  "endTime": "2025-01-30T17:00:00.000Z",
+  "alertTime": "2025-01-30T16:30:00.000Z",
+  "isCompleted": true,
+  "assignedTo": ["student4", "student5", "student6"],
+  "createdBy": "classLeader2"
+}
+
+###
+POST http://localhost:8888/api/v1/tasks
+content-type: application/json
+
+{
+  "taskTitle": "完成課後問卷",
+  "startTime": "2025-01-30T15:00:00.000Z",
+  "endTime": "2025-01-30T17:00:00.000Z",
+  "alertTime": "2025-01-30T16:30:00.000Z",
+  "isCompleted": true,
+  "assignedTo": ["huangtaa", "student5", "student6"],
+  "createdBy": "classLeader2"
+}
+
+
+###
+DELETE http://localhost:8888/api/v1/tasks/67985b4d2278c63e58aab0c0
+
+###
+DELETE http://localhost:8888/api/v1/tasks/deleteAll
