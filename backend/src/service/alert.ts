@@ -6,7 +6,6 @@ import { Alert } from "../types/alert";
  * @param assignedTo 學生 ID 陣列
  * @param taskTitle 任務標題
  */
-
 export const sendTaskNotifications = async (assignedTo: string[], taskTitle: string) => {
   try {
     // 產生通知
@@ -20,10 +19,7 @@ export const sendTaskNotifications = async (assignedTo: string[], taskTitle: str
     // 儲存所有通知
     await Promise.all(
       notifications.map(async (notification) => {
-        await AlertRepoImpl.addAlert({
-          ...notification,
-          message: Buffer.from(notification.message).toString('utf8')
-        });
+        await AlertRepoImpl.addAlert(notification);
       })
     );
   } catch (error) {
