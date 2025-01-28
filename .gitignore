@@ -1,4 +1,6 @@
-node_modules
-dist
+backend/node_modules
+backend/.dist
+backend/.DS_Store
+backend/.env
 .DS_Store
-.env
+frontend/node_modules
