@@ -33,7 +33,7 @@ export const serverOf: () => FastifyInstance = () => {
     return reply.status(200).send({ msg: "pong" });
   });
 
-  server.register(keycloak, opts);
+  // server.register(keycloak, opts);
   server.register(taskRoutes, { prefix: "/api/v1/tasks" });
   server.register(taskMemberRoutes, { prefix: "/api/v1/tasks/member" });
   server.register(alertRoutes, { prefix: "/api/v1/alerts" });

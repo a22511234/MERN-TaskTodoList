@@ -1,22 +1,21 @@
 import * as AlertRepoImpl from "../repository/alert";
 import { Alert } from "../types/alert";
+import { Task } from "../types/Task/task";
 
 /**
- * ç™¼é€é€šçŸ¥çµ¦å¤šä½å­¸ç”Ÿ
- * @param assignedTo å­¸ç”Ÿ ID é™£åˆ—
- * @param taskTitle ä»»å‹™æ¨™é¡Œ
+ * µo°e¥ô°È³qª¾
+ * @param assignedTo 
+ * @param taskTitle 
  */
 export const sendTaskNotifications = async (assignedTo: string[], taskTitle: string) => {
   try {
-    // ç”¢ç”Ÿé€šçŸ¥
     const notifications: Alert[] = assignedTo.map((studentId) => ({
-      message: "æ–°ä»»å‹™ï¼š" + taskTitle,
+      message: "·s¥ô°È" + taskTitle,
       createdAt: new Date(),
       read: false,
       userId: studentId,
     }));
 
-    // å„²å­˜æ‰€æœ‰é€šçŸ¥
     await Promise.all(
       notifications.map(async (notification) => {
         await AlertRepoImpl.addAlert(notification);
@@ -24,6 +23,43 @@ export const sendTaskNotifications = async (assignedTo: string[], taskTitle: str
     );
   } catch (error) {
     console.error(`Error sending notifications: ${error}`);
-    throw error; // ç¢ºä¿éŒ¯èª¤æœƒæ‹‹å‡ºï¼Œä»¥ä¾¿ä¸Šå±¤è™•ç†
+    throw error; 
   }
 };
+export const notifyAssignedStudentsOnDelete=async(deletedTask:Task)=>{
+  try {
+    const notifications: Alert[] = deletedTask.assignedTo.map((studentId) => ({
+      message: "¥ô°È¡G" + deletedTask.taskTitle + "¤w§R°£",
+      createdAt: new Date(),
+      read: false,
+      userId: studentId,
+    }));
+    await Promise.all(
+      notifications.map(async (notification) => {
+        await AlertRepoImpl.addAlert(notification);
+      })
+    );
+  } catch (error) {
+    console.error(`Error sending notifications: ${error}`);
+    throw error;
+  }
+}
+
+export const notifyAssignedStudentsOnUpdate=async(updatedTask:Task)=>{
+  try {
+    const notifications: Alert[] = updatedTask.assignedTo.map((studentId) => ({
+      message: "¥ô°È¡G" + updatedTask.taskTitle + "¤w§ó·s",
+      createdAt: new Date(),
+      read: false,
+      userId: studentId,
+    }));
+    await Promise.all(
+      notifications.map(async (notification) => {
+        await AlertRepoImpl.addAlert(notification);
+      })
+    );
+  } catch (error) {
+    console.error(`Error sending notifications: ${error}`);
+    throw error;
+  }
+}

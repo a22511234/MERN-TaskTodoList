@@ -1,5 +1,5 @@
 import mongoose, { model, Schema } from "mongoose";
-import { Task } from "../types/task";
+import { Task } from "../types/Task/task";
 
 const taskSchema: Schema = new Schema(
   {
@@ -34,6 +34,19 @@ const taskSchema: Schema = new Schema(
       type: [String],
       required: true,
     },
+    studentStatuses: [
+      {
+        userId: {
+          type: String,
+          required: true,
+        },
+        status: {
+          type: String,
+          required: true,
+          enum: ["not_started", "in_progress", "completed"],
+        },
+      },
+    ],
     createdBy: {
       type: String,
       required: true,

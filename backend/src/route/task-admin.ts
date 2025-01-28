@@ -1,9 +1,12 @@
 import { FastifyInstance, RouteShorthandOptions } from "fastify";
 import * as TaskRepoImpl from "../repository/task";
-import { Task } from "../types/task";
+import { Task } from "../types/Task/task";
 import { Types } from "mongoose";
 import { IdParams } from "../types/Params/IdParams";
-import { sendTaskNotifications } from "../service/alert";
+import {
+  notifyAssignedStudentsOnDelete,
+  sendTaskNotifications,
+} from "../service/alert";
 import { routeOptions } from "../types/Validation/taskSchema";
 
 const taskRoutes = (
@@ -19,10 +22,24 @@ const taskRoutes = (
       return reply.status(500).send({ msg: `Internal Server Error: ${error}` });
     }
   });
-  server.post("/",routeOptions ,async (request, reply) => {
+  server.post("/", routeOptions, async (request, reply) => {
     try {
       const taskBody = request.body as Task;
-      const task = await TaskRepoImpl.addTask(taskBody);
+
+      // 初始化學生任務狀態
+      const studentStatuses = taskBody.assignedTo.map((studentId) => ({
+        userId: studentId,
+        status: "not_started",
+      }));
+
+      // Merge studentStatuses into the task body
+      const createTask = {
+        ...taskBody,
+        studentStatuses,
+      };
+
+      console.log("Task",createTask)
+      const task = await TaskRepoImpl.addTask(createTask);
 
       // 發送通知給指派的學生
       await sendTaskNotifications(taskBody.assignedTo, taskBody.taskTitle);
@@ -43,6 +60,9 @@ const taskRoutes = (
       if (!task) {
         return reply.status(404).send({ msg: "Task not found" });
       }
+      // 發送通知給指派的學生
+      await notifyAssignedStudentsOnDelete(task);
+
       return reply.status(200).send({ task });
     } catch (error) {
       return reply.status(500).send({ msg: `Internal Server Error: ${error}` });
@@ -50,13 +70,15 @@ const taskRoutes = (
   });
 
   server.delete("/deleteAll", async (request, reply) => {
-      try {
-        const result = await TaskRepoImpl.deleteAllTasks();
-        return reply.status(200).send({ msg: "All tasks deleted", deletedCount: result.deletedCount });
-      } catch (error) {
-        return reply.status(500).send({ msg: `Internal Server Error: ${error}` });
-      }
-    });
+    try {
+      const result = await TaskRepoImpl.deleteAllTasks();
+      return reply
+        .status(200)
+        .send({ msg: "All tasks deleted", deletedCount: result.deletedCount });
+    } catch (error) {
+      return reply.status(500).send({ msg: `Internal Server Error: ${error}` });
+    }
+  });
   done();
 };
 

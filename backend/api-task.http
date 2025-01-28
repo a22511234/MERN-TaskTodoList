@@ -48,9 +48,24 @@ content-type: application/json
   "createdBy": "classLeader2"
 }
 
-
 ###
-DELETE http://localhost:8888/api/v1/tasks/67985b4d2278c63e58aab0c0
+PATCH http://localhost:8888/api/v1/tasks/member/6798de2fa84edcdf968f7b04/status
+content-type: application/json
+
+{
+  "userId": "huangtaa",
+  "status": "in_progress"
+}
+###
+PATCH http://localhost:8888/api/v1/tasks/member/6798de2fa84edcdf968f7b04/status
+content-type: application/json
+
+{
+  "userId": "hwangtaa",
+  "status": "completed"
+}
+###
+DELETE http://localhost:8888/api/v1/tasks/6798de2fa84edcdf968f7b04
 
 ###
 DELETE http://localhost:8888/api/v1/tasks/deleteAll
